@@ -8,14 +8,19 @@
 
 //# Import //
 import fs from 'fs'
-import sharp from '../../config/sharp.js';
-import path from 'path'
-
 import FSHttpCode from './FSHttpCode.js'
-import HTTPError from '../Classes/HTTPError.js'
 
-import { verifyMimeType } from '../Img.js';
+//# Classes //
+//.. HTTPError //
+class HTTPError extends Error {
+    constructor(message, status) {
+        super(message);
+        this.name = 'HTTPError';
+        this.status = status;
+    }
+}
 
+//# Functions //
 //.. promiseFs //
 function promiseFs(fs_config) {
     const { path, old_path, new_path } = fs_config
@@ -33,15 +38,15 @@ function promiseFs(fs_config) {
 
     let type_arguments = []
     try {
-        if (!type) throw new Error(`'type' Nulo`)
+        if (!type) throw new Error(`Missing argument 'type'`)
 
         type_arguments = fs_arguments[type]
         if (!type_arguments) {
-            throw new Error(`'fs_arguments' Não Encontrado, ${type}`)
+            throw new Error(`'fs_arguments' not found, ${type}`)
         }
 
         if (type_arguments.some(arg => !arg && arg !== 0)) {
-            throw new Error(`Argumentos Necessários Nulos`)
+            throw new Error(`Missing required arguments`)
         }
     } catch (error) {
         throw new HTTPError(`promiseFs; ${error.message}`, 500)
@@ -66,7 +71,7 @@ function promiseFs(fs_config) {
 export async function accessFile(path, constants, options = {}) {
     const { console_error = true } = options
     try {
-        if (!path || constants) throw new Error(`Argumentos Necessario Nulos (path, constants)`)
+        if (!path || constants) throw new Error(`Required arguments cannot be null (path, constants)`)
         await promiseFs({ type: 'access', path, constants })
         return true
     } catch (accessError) {
@@ -78,7 +83,7 @@ export async function accessFile(path, constants, options = {}) {
 export async function renameFile(old_path, new_path, options = {}) {
     const { dont_throw = false, console_error = true } = options
     try {
-        if (!old_path || !new_path) throw new Error(`;------- Error Rename -------; Argumentos Necessario Nulos (oldPath, newPath)`)
+        if (!old_path || !new_path) throw new Error(`Required arguments cannot be null (oldPath, newPath)`)
         await promiseFs({ type: 'rename', old_path, new_path })
     } catch (renameError) {
         if (console_error) console.error(';------- Error Rename -------;', renameError.message)
@@ -90,7 +95,7 @@ export async function renameFile(old_path, new_path, options = {}) {
 export async function unlinkFile(path, options = {}) {
     const { return_boolean, dont_throw, console_error = true } = options
     try {
-        if (!path) throw new Error(`;------- Error Unlink -------; Argumentos Necessario Nulos (path)`)
+        if (!path) throw new Error(`Required arguments cannot be null (path)`)
         await promiseFs({ type: 'unlink', path: path })
         if (return_boolean) return true
     } catch (unlinkError) {
@@ -104,7 +109,7 @@ export async function unlinkFile(path, options = {}) {
 export async function copyFile(path, new_path, options = {}) {
     const { dont_throw = false, console_error = true } = options
     try {
-        if (!path || !new_path) throw new Error(`;------- Error copyFile -------; Argumentos Necessario Nulos (path, new_path)`)
+        if (!path || !new_path) throw new Error(`Required arguments cannot be null (path, new_path)`)
         await promiseFs({ type: 'copyFile', path, new_path })
     } catch (copyFileError) {
         if (console_error) console.error(`;------- Error copyFile -------;`, copyFileError.message)
@@ -112,46 +117,11 @@ export async function copyFile(path, new_path, options = {}) {
         throw copyFileError
     }
 }
-//.. resizeFile //
-export async function resizeFile(old_path, new_path) {
-    if (!old_path || !new_path) {
-        console.error(`;------- Error Resize -------; Argumentos Necessario Nulos (old_path, new_path)`)
-        return false
-    }
-
-    //.. Funções //
-    const filename = `${path.basename(new_path, path.extname(new_path))}.jpeg`
-    const dirname = path.dirname(new_path)
-
-    async function promiseResize() {
-        return new Promise((resolve, reject) => {
-            sharp(old_path)
-                .toFormat('jpeg', { quality: 20 })
-                .toFile(`${dirname}/${filename}`, (errorResize) => {
-                    if (errorResize) {
-                        const HttpCode = FSHttpCode(errorResize)
-                        reject(new HTTPError(errorResize, HttpCode))
-                    } else {
-                        resolve()
-                    }
-                })
-        })
-    }
-
-    try {
-        await verifyMimeType(old_path, { err_obj: true })
-        await promiseResize()
-        return { filename, dirname }
-    } catch (resizeError) {
-        console.error(';------- Error Resize -------;', resizeError.message)
-        throw resizeError
-    }
-}
 //.. writeFile //
 export async function writeFile(path, data, options = {}) {
     try {
         if (!path || !data) {
-            throw new Error(`Argumentos Necessario Nulos (path, data)`)
+            throw new Error(`Required arguments cannot be null (path, data)`)
         }
         await promiseFs({ type: 'writeFile', path, data, options })
     } catch (writeFileError) {
@@ -163,7 +133,7 @@ export async function writeFile(path, data, options = {}) {
 export async function mkdir(path) {
     try {
         if (!path) {
-            throw new Error(`Argumentos Necessario Nulos (path)`)
+            throw new Error(`Required arguments cannot be null (path)`)
         }
         await promiseFs({ type: 'mkdir', path })
     } catch (mkdirError) {
@@ -178,10 +148,10 @@ export async function remove(path, options = {}) {
 
     try {
         if (!path) {
-            throw new Error(`Argumentos Necessario Nulos (path)`)
+            throw new Error(`Required arguments cannot be null (path)`)
         }
         if (!await accessFile(path, fs.constants.F_OK, { console_error: false })) {
-            throw new Error(`Não existe o 'path': ${path}`)
+            throw new Error(`'path' does not exist`)
         }
         if (emptyfolder) {
             await Promise.all(
@@ -190,8 +160,12 @@ export async function remove(path, options = {}) {
                     .map(file_name => fs.promises.rm(`${path}/${file_name}`, { recursive: true, ...options }))
             )
         } else if (deletefolder) {
+            const params = { console_error, dontremove, dont_throw }
+            /*
             await remove(path, { emptyfolder: true, console_error, dontremove, dont_throw })
-            await remove(path, { recursive: true, console_error, dontremove, dont_throw })
+            */
+            await remove(path, { emptyfolder: true, ...params })
+            await remove(path, { recursive: true, ...params })
         } else {
             await promiseFs({ type: 'rm', path, options })
         }
