@@ -1,11 +1,3 @@
-/*
-                                                   # COMO FUNCIONA ?
-
-..                              IRÁ FUNCIONAR COMO O MÓDULO 'fs; file system' COM FUNÇÕES Á MAIS.
-..                 IRÁ VERIFICAR VALORES, ENVIAR RESPOSTAS AO CLIENTE, LANÇAR MENSAGENS NO CONSOLE, SE NECESSÁRIO.
-
-*/
-
 //# Import //
 import fs from 'fs'
 import FSHttpCode from './FSHttpCode.js'
@@ -31,7 +23,7 @@ function promiseFs(fs_config) {
         unlink: [path],
         rm: [path, options],
 
-        mkdir: [path],
+        mkdir: [path, options],
         writeFile: [path, data, options],
         copyFile: [path, new_path],
     }
@@ -130,12 +122,12 @@ export async function writeFile(path, data, options = {}) {
     }
 }
 //.. mkdir //
-export async function mkdir(path) {
+export async function mkdir(path, options = {}) {
     try {
         if (!path) {
             throw new Error(`Required arguments cannot be null (path)`)
         }
-        await promiseFs({ type: 'mkdir', path })
+        await promiseFs({ type: 'mkdir', path, options })
     } catch (mkdirError) {
         console.error(';------- Error mkdir -------;', mkdirError.message)
         throw mkdirError
@@ -161,9 +153,6 @@ export async function remove(path, options = {}) {
             )
         } else if (deletefolder) {
             const params = { console_error, dontremove, dont_throw }
-            /*
-            await remove(path, { emptyfolder: true, console_error, dontremove, dont_throw })
-            */
             await remove(path, { emptyfolder: true, ...params })
             await remove(path, { recursive: true, ...params })
         } else {
