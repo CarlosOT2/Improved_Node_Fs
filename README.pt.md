@@ -1,4 +1,4 @@
-# fsHelpers # 
+# improved_nodefs # 
 ![Node Version](https://img.shields.io/badge/node-v20.11.1-yellow)
 </br>
 </br>
@@ -6,7 +6,7 @@
 Pacote focado em melhorar o Node fs tradicional, com funções contendo funcionalidades extras e simplificadas
 
 <h3> Instalação </h3>
-Para instalar o pacote, execute o comando <code>npm i fshelpers</code>
+Para instalar o pacote, execute o comando <code>npm i improved_nodefs</code>
 </br>
 Utiliza o mecanismo de <b>ES Modules</b> para importar e exportar funções
 

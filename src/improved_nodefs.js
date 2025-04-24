@@ -83,6 +83,7 @@ export async function renameFile(old_path, new_path, options = {}) {
         throw renameError
     }
 }
+
 //.. unlinkFile //
 export async function unlinkFile(path, options = {}) {
     const { return_boolean, dont_throw, console_error = true } = options

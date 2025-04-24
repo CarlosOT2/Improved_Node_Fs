@@ -1,26 +1,29 @@
 {
-  "name": "fshelpers",
+  "name": "improved_nodefs",
   "version": "1.0.0",
   "description": "Improved node fs",
   "type": "module",
-  "main": "src/fsHelpers.js",
+  "main": "src/improved_nodefs.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CarlosOT2/fsHelpers.git"
+    "url": "git+https://github.com/CarlosOT2/improved_nodefs.git"
   },
   "keywords": [
     "node",
     "nodefs",
     "fs",
-    "file"
+    "file",
+    "improved",
+    "enhanced",
+    "better"
   ],
   "author": "CarlosOT2",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CarlosOT2/fsHelpers/issues"
+    "url": "https://github.com/CarlosOT2/improved_nodefs/issues"
   },
-  "homepage": "https://github.com/CarlosOT2/fsHelpers#readme"
+  "homepage": "https://github.com/CarlosOT2/improved_nodefs+#readme"
 }
