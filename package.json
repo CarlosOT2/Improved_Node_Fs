@@ -1,6 +1,6 @@
 {
   "name": "improved_nodefs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Improved node fs",
   "type": "module",
   "main": "src/improved_nodefs.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CarlosOT2/improved_nodefs.git"
+    "url": "git+https://github.com/CarlosOT2/Improved_Node_Fs.git"
   },
   "keywords": [
     "node",
@@ -23,7 +23,7 @@
   "author": "CarlosOT2",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CarlosOT2/improved_nodefs/issues"
+    "url": "https://github.com/CarlosOT2/Improved_Node_Fs/issues"
   },
-  "homepage": "https://github.com/CarlosOT2/improved_nodefs+#readme"
+  "homepage": "https://github.com/CarlosOT2/Improved_Node_Fs#readme"
 }
