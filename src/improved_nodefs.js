@@ -1,6 +1,6 @@
 //# Import //
 import fs from 'fs'
-import FSHttpCode from './FSHttpCode.js'
+import FSHttpCode from 'nodefs_httpcode'
 
 //# Classes //
 //.. HTTPError //

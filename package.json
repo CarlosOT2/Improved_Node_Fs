@@ -1,6 +1,6 @@
 {
   "name": "improved_nodefs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Improved node fs",
   "type": "module",
   "main": "src/improved_nodefs.js",
@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/CarlosOT2/Improved_Node_Fs/issues"
   },
-  "homepage": "https://github.com/CarlosOT2/Improved_Node_Fs#readme"
+  "homepage": "https://github.com/CarlosOT2/Improved_Node_Fs#readme",
+  "dependencies": {
+    "nodefs_httpcode": "^1.0.0"
+  }
 }
